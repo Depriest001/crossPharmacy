@@ -18,25 +18,31 @@ class AdminController extends Controller
         $staff = auth('staff')->user();
         $isAdmin = $staff->role->role_type === 'Admin';
 
-        // Base queries depend on role
+        // Base queries
         $staffQuery = Staff::where('status', 'active');
         $salesQuery = Sale::query();
         $saleItemsQuery = SaleItem::query();
 
         if (!$isAdmin) {
-            // Restrict to user's branch
+            // Restrict staff to the same branch
             $staffQuery->where('branch_id', $staff->branch_id);
-            $salesQuery->where('branch_id', $staff->branch_id);
-            $saleItemsQuery->whereHas('sale', function ($q) use ($staff) {
+
+            // Restrict sales to staff within the same branch
+            $salesQuery->whereHas('staff', function ($q) use ($staff) {
+                $q->where('branch_id', $staff->branch_id);
+            });
+
+            // Restrict sale items to sales made by staff in the same branch
+            $saleItemsQuery->whereHas('sale.staff', function ($q) use ($staff) {
                 $q->where('branch_id', $staff->branch_id);
             });
         }
 
-        // Counts
-        $userCount = $staffQuery->count(); // staff count (branch-specific if not admin)
-        $totalProductSales = $saleItemsQuery->sum('quantity'); // total items sold
-        $totalSales = $salesQuery->sum('grand_total'); // total ₦ amount sold
-        $productCount = Product::count(); // all products (can also restrict by branch if needed)
+        // Stats
+        $userCount = $staffQuery->count();
+        $totalProductSales = $saleItemsQuery->sum('quantity');
+        $totalSales = $salesQuery->sum('grand_total');
+        $productCount = Product::count();
 
         // Chart Data
         $yearlySales = $salesQuery

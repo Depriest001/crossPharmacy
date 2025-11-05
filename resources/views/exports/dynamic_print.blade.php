@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.jpg')}}" />
     <title>{{ucfirst($table)}} Print View</title>    
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css')}}" />
 </head>
@@ -17,8 +19,8 @@
     }
     @media print{
         @page {
-            margin: 10px;
-            layout: landscape;
+            size: A4 landscape; /* ✅ A4 paper in landscape orientation */
+            margin: 10mm
         }
     }
 </style>
@@ -47,7 +49,7 @@
 </div>
 
 <script>
-    // window.onload = () => window.print();
+    window.onload = () => window.print();
 </script>  
 </body>
 </html>

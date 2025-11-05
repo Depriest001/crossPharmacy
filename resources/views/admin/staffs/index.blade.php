@@ -154,7 +154,7 @@
 
                 <div class="mt-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input class="form-control" type="email" placeholder="johndoe@example.com" id="email" name="email" disabled />
+                    <input class="form-control" type="email" placeholder="johndoe@example.com" id="email" name="email" required />
                 </div>
 
                 <div class="mt-3">
@@ -177,7 +177,7 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="mt-3">
                     <label for="branch" class="form-label">Branch</label>
                     <select id="branch" name="branch_id" class="form-select" required>
                         <option value="" selected disabled>Select Branch</option>
@@ -187,7 +187,7 @@
                     </select>
                 </div>
 
-                <div class="form-group mt-3">
+                <div class="mt-3">
                     <small class="text-warning">The default password is <strong>123456</strong></small>
                     <input type="hidden" class="form-control" value="123456" name="password" required />
                 </div>

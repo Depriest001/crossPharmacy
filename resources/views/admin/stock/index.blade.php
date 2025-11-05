@@ -143,51 +143,52 @@
                 </div>
             </div>
         </div>
+        <!-- Offcanvas for {{ $product->product_name }} -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="adjustOffcanvas" aria-labelledby="adjustOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 id="adjustOffcanvasLabel" class="offcanvas-title">Adjust</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+                <form action="{{ route('stock.adjust.store') }}" method="POST" id="adjustForm">
+                    @csrf
+                    <input type="hidden" name="product_id" id="product_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Adjustment Type</label>
+                        <select name="adjust_type" class="form-select" id="adjust_type" required>
+                        <option value="">Select Type</option>
+                        <option value="add">Add Stock</option>
+                        <option value="remove">Remove Stock</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" placeholder="Enter quantity" min="1" required>
+                    </div>
+
+                    <div class="mb-3" id="expiry_wrap" style="display:none;">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" name="expiry_date" class="form-control" id="expiry_input">
+                        <small class="text-muted">Specify expiry date for the new stock.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Reason (optional)</label>
+                        <textarea name="reason" class="form-control" rows="2" placeholder="E.g., expired products, restock, correction..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         @endif
     </div>
-    <!-- Offcanvas for {{ $product->product_name }} -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="adjustOffcanvas" aria-labelledby="adjustOffcanvasLabel">
-        <div class="offcanvas-header">
-            <h5 id="adjustOffcanvasLabel" class="offcanvas-title">Adjust</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body my-auto mx-0 flex-grow-0">
-            <form action="{{ route('stock.adjust.store') }}" method="POST" id="adjustForm">
-                @csrf
-                <input type="hidden" name="product_id" id="product_id">
-
-                <div class="mb-3">
-                    <label class="form-label">Adjustment Type</label>
-                    <select name="adjust_type" class="form-select" id="adjust_type" required>
-                    <option value="">Select Type</option>
-                    <option value="add">Add Stock</option>
-                    <option value="remove">Remove Stock</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Quantity</label>
-                    <input type="number" name="quantity" class="form-control" placeholder="Enter quantity" min="1" required>
-                </div>
-
-                <div class="mb-3" id="expiry_wrap" style="display:none;">
-                    <label class="form-label">Expiry Date</label>
-                    <input type="date" name="expiry_date" class="form-control" id="expiry_input">
-                    <small class="text-muted">Specify expiry date for the new stock.</small>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Reason (optional)</label>
-                    <textarea name="reason" class="form-control" rows="2" placeholder="E.g., expired products, restock, correction..."></textarea>
-                </div>
-
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const offcanvasEl = document.getElementById('adjustOffcanvas');

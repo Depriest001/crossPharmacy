@@ -43,6 +43,10 @@
             @endif
             
             <div class="card-body">
+                
+                @php
+                    $role = auth('staff')->user()->role->role_type ?? '';
+                @endphp
                 <form id="formAccountSettings" action="{{ route('staffs.update', $staff->id)}}" method="POST">
                     @csrf
                     @method('PUT')
@@ -53,7 +57,7 @@
 
                     <div class="mt-3">
                         <label for="email" class="form-label">E-mail</label>
-                        <input class="form-control" type="email" id="email" value="{{ $staff->email }}" name="email" required />
+                        <input class="form-control" type="email" id="email" value="{{ $staff->email }}" name="email" {{ $role === 'Admin' ? 'required' : 'readonly' }} />
                     </div>
 
                     <div class="mt-3">

@@ -37,7 +37,7 @@ class AdminStaffController extends Controller
             'address' => 'required|string|max:255',
             'role_id' => 'required|exists:roles,id',
             'branch_id' => 'required|exists:branches,id',
-            'password' => 'required|string|min:6|confirmed', // ✅ confirm password rule
+            'password' => 'required|string|min:6', // ✅ confirm password rule
         ]);
 
         Staff::create([
