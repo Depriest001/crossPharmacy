@@ -53,9 +53,6 @@ class ExportController extends Controller
                     ->setPaper('A4', 'landscape'); // optional for better table layout
                 return $pdf->download("{$table}.pdf");
 
-            case 'print':
-                return view('exports.dynamic_print', compact('records', 'columns', 'table'));
-
             default:
                 return redirect()->back()->with('error', 'Invalid export type.');
         }

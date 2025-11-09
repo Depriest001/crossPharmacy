@@ -205,7 +205,7 @@
         $('#exampleTable').DataTable({
           pageLength: 10,
           responsive: true,
-          scrollY: '60vh',       // make table body scrollable
+          scrollY: '80vh',       // make table body scrollable
           scrollCollapse: true,
           paging: true,
           fixedHeader: true,     // keep header fixed when scrolling

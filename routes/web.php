@@ -31,12 +31,19 @@ Route::prefix('admin')->middleware('auth:staff')->group(function () {
 
     Route::put('/staff/password/update', [AdminController::class, 'updatePassword'])
         ->name('staff.password.update');
+
+    Route::put('/admin/system-settings', [AdminController::class, 'updateSystemSettings'])
+    ->name('system.settings.update');
         
     Route::get('/', [AdminController::class, 'admindashboard'])->name('admin.dashboard');
     Route::get('/profile', [AdminController::class, 'adminprofile'])->name('admin.profile');
+    Route::get('/system/setting', [AdminController::class, 'systemsetting'])->name('admin.setting');
     
     Route::get('/stock', [StockController::class, 'index'])->name('admin.stock.index');
     Route::post('/stock/adjust', [StockController::class, 'storeAdjustment'])->name('stock.adjust.store');
+
+    Route::get('/sale/report', [SaleController::class, 'salereport'])
+    ->name('report.sale');
 
     Route::resource('staffs', AdminStaffController::class);
     Route::resource('branch', BranchController::class);
@@ -48,4 +55,5 @@ Route::prefix('admin')->middleware('auth:staff')->group(function () {
     Route::get('/product/barcode/{barcode}', [SaleController::class, 'getProductByBarcode']);
     Route::get('/sale/{sale}/receipt', [SaleController::class, 'printReceipt'])
     ->name('admin.sale.receipt');
+    
 });

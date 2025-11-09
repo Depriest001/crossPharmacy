@@ -148,6 +148,7 @@
             <head>
                 <title>Print Barcode</title>
                 <style>
+                @page { size: A6; margin: 10mm; }
                 body { text-align: center; font-family: Arial, sans-serif; margin-top: 20px; }
                 img { max-width: 100%; }
                 small { display: block; font-weight: bold; margin-top: 10px; }

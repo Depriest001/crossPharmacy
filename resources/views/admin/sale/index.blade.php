@@ -176,26 +176,37 @@ $(document).ready(function () {
                 // Check if item already exists in cart
                 const existingItem = cart.find(item => item.barcode === data.barcode);
                 if (existingItem) {
-                    existingItem.qty += qty;
-                    existingItem.total = existingItem.price * existingItem.qty;
+                    const newQty = existingItem.qty += qty;
+                    if (newQty <= data.quantity) {
+                        existingItem.qty = newQty;
+                        existingItem.total = existingItem.price * existingItem.qty;
+                    }else{
+                        showAlert('⚠️ Error. Available Stock is low than Purchase Quantity.', 'danger');
+                    }
+                    
                 } else {
-                    cart.push({
-                        name: data.name,
-                        barcode: data.barcode,
-                        price: parseFloat(data.price),
-                        qty: qty,
-                        total: parseFloat(data.price) * qty
-                    });
+                    if (qty <= data.quantity) {
+                        cart.push({
+                            name: data.name,
+                            barcode: data.barcode,
+                            price: parseFloat(data.price),
+                            qty: qty,
+                            total: parseFloat(data.price) * qty
+                        });
+                    }else{
+                        showAlert('⚠️ Error. Available Stock is low than Purchase Quantity.', 'danger');
+                    }
                 }
 
                 renderCart();
                 $('#barcode').val('');
             },
             error: function (xhr) {
+                alert(xhr);
                 if (xhr.status === 404) {
                     showAlert('❌ Product not found. Please check the barcode.', 'danger');
                 } else {
-                    showAlert('⚠️ Server error. Please try again later.', 'danger');
+                    showAlert(xhr.status+'⚠️ Server error. Please try again later.', 'danger');
                 }
             }
         });

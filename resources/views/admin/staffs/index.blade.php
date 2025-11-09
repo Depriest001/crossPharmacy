@@ -54,7 +54,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('export.data', ['table' => 'staff', 'type' => 'print']) }}" target="_blank"
+                                    <a id="printTableBtn" style="cursor: pointer;"
                                     class="dropdown-item d-flex align-items-center">
                                         <i class="icon-base bx bx-printer me-1"></i>Print
                                     </a>
@@ -92,7 +92,7 @@
                         <th>Role</th>
                         <th>Branch</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th class="no-print">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -112,7 +112,7 @@
                                 @endif
                             </td>
 
-                            <td>
+                            <td class="no-print">
                             <a href="{{ route('staffs.edit', $staff->id) }}" class="btn p-2 btn-primary me-1">
                                 <i class="bx bx-edit-alt"></i>
                             </a>
@@ -199,4 +199,56 @@
             </form>
         </div>
     </div>
+<script>
+document.getElementById('printTableBtn').addEventListener('click', function () {
+    // Initialize DataTable instance
+    var table = $('#exampleTable').DataTable();
+
+    // Get all rows (even those not visible due to pagination)
+    var allRows = table.rows({ search: 'applied' }).nodes().to$();
+
+    // Clone the header and footer
+    var thead = $('#exampleTable thead').clone();
+    var tfoot = $('#exampleTable tfoot').clone();
+
+    // Build a new table for printing
+    var printTable = $('<table></table>')
+        .addClass('table table-sm table-striped table-hover')
+        .append(thead)
+        .append(allRows.clone())  // clone to avoid affecting original table
+        .append(tfoot);
+
+    // Remove Actions column and barcodes for print
+    printTable.find('th.no-print, td.no-print, .printNO').remove();
+
+    // Open print window
+    var printWindow = window.open('', '', 'width=1200,height=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Staff Table - Print</title>
+                <style>
+                    @page { size: A4 landscape; margin: 10mm; }
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+                    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+                    th { background: #d1f7d1; }
+                    tfoot td { font-weight: bold; background: #f2f2f2; }
+                    h4 { text-align: center; margin-bottom: 20px; }
+                </style>
+            </head>
+            <body>
+                <h4>Staff List</h4>
+                <p><strong>Printed by:</strong> {{ auth('staff')->user()->full_name ?? 'N/A' }}</p>
+                ${printTable.prop('outerHTML')}
+            </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+});
+</script>
 @endsection

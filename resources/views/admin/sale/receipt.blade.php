@@ -109,9 +109,9 @@
             <!-- HEADER -->
             <div class="receipt-header text-center">
                 <img src="{{ asset('assets/images/logo1.jpg') }}" alt="Logo">
-                <h4 class="fw-bold mt-2">The Cross Pharmacy</h4>
-                <p class="text-muted small mb-0">123 Health Street, Lagos, Nigeria</p>
-                <p class="text-muted small">📞 +234 800 000 0000 | ✉️ info@thecrosspharmacy.com</p>
+                <h4 class="fw-bold mt-2">{{ $systemInfo->system_name ?? 'N/A' }}</h4>
+                <p class="text-muted small mb-0">{{ $systemInfo->address }}</p>
+                <p class="text-muted small">📞 {{ $systemInfo->phone ?? 'N/A' }} | ✉️ {{ $systemInfo->email ?? 'N/A' }}</p>
             </div>
 
             <!-- META INFO -->

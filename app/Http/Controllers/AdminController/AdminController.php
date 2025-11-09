@@ -10,6 +10,7 @@ use App\Models\staff;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Product;
+use App\Models\SystemInfo;
 
 class AdminController extends Controller
 {
@@ -66,6 +67,12 @@ class AdminController extends Controller
         return view('admin.profile');
     }
 
+    public function systemsetting()
+    {
+        $systemInfo = SystemInfo::first();
+        return view('admin.settings', compact('systemInfo'));
+    }
+
     public function updateProfile(Request $request)
     {
         $staff = auth('staff')->user();
@@ -100,6 +107,24 @@ class AdminController extends Controller
         $staff->save();
 
         return back()->with('success', 'Password updated successfully!');
+    }
+
+    public function updateSystemSettings(Request $request)
+    {
+        $systemInfo = SystemInfo::first(); // Get the single row
+
+        // Validation rules
+        $validatedData = $request->validate([
+            'system_name' => 'required|string|max:255',
+            'email'       => 'nullable|email|max:255',
+            'phone'       => 'nullable|string|max:50',
+            'address'     => 'nullable|string|max:500',
+            'currency'    => 'nullable|string|max:10',
+        ]);
+
+        $systemInfo->update($validatedData);
+
+        return redirect()->back()->with('success', 'System settings updated successfully.');
     }
 
 }

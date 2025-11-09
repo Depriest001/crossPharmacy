@@ -18,7 +18,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('export.data', ['table' => 'products', 'type' => 'print']) }}" target="_blank"
+                                    <a id="printTableBtn" style="cursor: pointer;"
                                     class="dropdown-item d-flex align-items-center">
                                         <i class="icon-base bx bx-printer me-1"></i>Print
                                     </a>
@@ -93,7 +93,7 @@
                             <th>Price (₦)</th>
                             <th>Expiry Date</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th class="no-print">Actions</th>
                         </tr>
                     </thead>
 
@@ -102,7 +102,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.2, 30) !!}
+                                    <div class="printNO"> {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.2, 30) !!}</div>
                                     <small class="d-block">{{ $product->barcode }}</small>
                                 </td>
                                 <td>{{ $product->product_name }}</td>
@@ -115,7 +115,7 @@
                                         <span class="badge bg-label-danger">Inactive</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="no-print">
                                     <a class="btn btn-sm p-1 btn-primary me-1" href="{{ route('product.edit', $product->id) }}"><i class="icon-base bx bx-edit-alt"></i></a>
                                     <a class="btn btn-sm p-1 btn-info me-1" href="{{ route('product.show', $product->id) }}"><i class="icon-base bx bx-show-alt"></i></a>
                                     <!-- Delete Button -->
@@ -193,4 +193,63 @@
             </form>
         </div>
     </div>
+<script>
+document.getElementById('printTableBtn').addEventListener('click', function () {
+    // Initialize DataTable instance
+    var table = $('#exampleTable').DataTable();
+
+    // Get all rows (even those not visible due to pagination)
+    var allRows = table.rows({ search: 'applied' }).nodes().to$();
+
+    // Clone the header and footer
+    var thead = $('#exampleTable thead').clone();
+    var tfoot = $('#exampleTable tfoot').clone();
+
+    // Build a new table for printing
+    var printTable = $('<table></table>')
+        .addClass('table table-sm table-striped table-hover')
+        .append(thead)
+        .append(allRows.clone())  // clone to avoid affecting original table
+        .append(tfoot);
+
+    // Remove Actions column and barcodes for print
+    printTable.find('th.no-print, td.no-print').remove();
+
+    // Fix colspan in tfoot: remove from last td
+    var tfootCells = printTable.find('tfoot tr td');
+    if(tfootCells.length) {
+        tfootCells.last().removeAttr('colspan');
+    }
+
+    // Open print window
+    var printWindow = window.open('', '', 'width=1200,height=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Products Table - Print</title>
+                <style>
+                    @page { size: A4 landscape; margin: 10mm; }
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+                    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+                    th { background: #d1f7d1; }
+                    tfoot td { font-weight: bold; background: #f2f2f2; }
+                    h4 { text-align: center; margin-bottom: 20px; }
+                </style>
+            </head>
+            <body>
+                <h4>Products List</h4>
+                <p><strong>Printed by:</strong> {{ auth('staff')->user()->full_name ?? 'N/A' }}</p>
+                ${printTable.prop('outerHTML')}
+            </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+});
+</script>
+
 @endsection

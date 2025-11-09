@@ -81,6 +81,23 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->routeIs('report.sale') ? 'active' : '' }}">
+            <a href="{{ route('report.sale') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bar-chart-alt"></i>
+                <div class="text-truncate">Sale Report</div>
+            </a>
+        </li>
+
+        <!-- ADMIN ONLY -->
+        @if($role === 'Admin')
+        <li class="menu-item {{ request()->routeIs('admin.setting') ? 'active' : '' }}">
+            <a href="{{ route('admin.setting') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div class="text-truncate">System Setting</div>
+            </a>
+        </li>
+        @endif
+
         <!-- LOGOUT -->
         <li class="menu-item">
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

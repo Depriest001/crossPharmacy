@@ -26,4 +26,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+
+    public function getItemsSumQuantityAttribute()
+    {
+        return $this->items->first()->items_sum_quantity ?? 0;
+    }
 }
