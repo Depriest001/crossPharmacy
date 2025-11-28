@@ -57,6 +57,7 @@
                         @elseif($role === 'Staff')
                             <th>Staff</th>
                         @endif
+                        <th>Status</th>
                         <th>Total Items Sold</th>
                         <th>Total Amount (₦)</th>
                         <th class="no-print">Action</th>
@@ -73,6 +74,15 @@
                             @elseif($role === 'Staff')
                                 <td>{{ $sale->staff->full_name ?? 'N/A' }}</td>
                             @endif
+                            <td>
+                                @if ($sale->status === 'pending')
+                                    <span class="badge bg-label-warning">Pending</span>
+                                @elseif ($sale->status === 'completed')
+                                    <span class="badge bg-label-success">Completed</span>
+                                @else
+                                    <span class="badge bg-label-danger">Cancelled</span>
+                                @endif
+                            </td>
                             <td>{{ $sale->items_sum_quantity ?? 0 }}</td>
                             <td>₦{{ number_format($sale->grand_total, 2) }}</td>
                             <td class="no-print">
@@ -86,14 +96,14 @@
                     <tfoot class="table-light fw-bold">
                         <tr>
                             @if($role === 'Admin')
-                                <td colspan="4" class="text-end">Total:</td>
+                                <td colspan="5" class="text-end">Total:</td>
                             @elseif($role === 'Staff')
-                                <td colspan="3" class="text-end">Total:</td>
+                                <td colspan="4" class="text-end">Total:</td>
                             @else
-                                <td colspan="2" class="text-end">Total:</td>
+                                <td colspan="3" class="text-end">Total:</td>
                             @endif
                             <td>{{ $sales->sum('items_sum_quantity') }}</td>
-                            <td colspan="2">₦{{ number_format($sales->sum('grand_total'), 2) }}</td>
+                            <td colspan="3">₦{{ number_format($sales->sum('grand_total'), 2) }}</td>
                         </tr>
                     </tfoot>
                 @endif

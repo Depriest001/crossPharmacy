@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminController\ProductController;
 use App\Http\Controllers\AdminController\ProductCategoryController;
 use App\Http\Controllers\AdminController\StockController;
 use App\Http\Controllers\AdminController\SaleController;
+use App\Http\Controllers\AdminController\PosController;
 
 // Authentication routes
 Route::prefix('auth')->group(function () {
@@ -51,8 +52,27 @@ Route::prefix('admin')->middleware('auth:staff')->group(function () {
     Route::resource('product', ProductController::class);
     Route::resource('category', ProductCategoryController::class);
     Route::resource('sale', SaleController::class);
+    
+    Route::patch('staffs/softdelete/{staff}', [AdminStaffController::class, 'softdelete'])->name('staff.soft.delete');
 
-    Route::get('/product/barcode/{barcode}', [SaleController::class, 'getProductByBarcode']);
+     // Seller: POS Entry
+    Route::get('/pos-entry', [PosController::class, 'entryPage'])->name('pos.entry');
+    Route::post('/pos-entry/save', [PosController::class, 'saveCart'])->name('pos.entry.save');
+    Route::patch('pos/pending/{sale}', [PosController::class, 'destroyPendingSale'])
+    ->name('pos.pending.destroy');
+
+
+    // Cashier: POS Checkout
+    // Cashier: see all pending sales
+    Route::get('checkout', [PosController::class, 'checkout'])->name('pos.checkout');
+
+    // Get sale items via AJAX
+    Route::get('checkout/{sale}', [PosController::class, 'getSaleItems']);
+
+    // Complete sale
+    Route::patch('checkout/complete', [PosController::class, 'completeSale'])->name('checkout.complete');
+
+    Route::get('/product/barcode/{barcode}', [PosController::class, 'getProductByBarcode']);
     Route::get('/sale/{sale}/receipt', [SaleController::class, 'printReceipt'])
     ->name('admin.sale.receipt');
     

@@ -162,7 +162,7 @@
                 <button onclick="window.print()" class="btn btn-dark px-4">
                     🖨️ Print Receipt
                 </button>
-                <a href="{{ route('sale.index') }}" class="btn btn-outline-secondary px-4">
+                <a href="{{ route('report.sale') }}" class="btn btn-outline-secondary px-4">
                     Back to POS
                 </a>
             </div>

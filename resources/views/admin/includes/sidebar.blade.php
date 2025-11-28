@@ -17,14 +17,6 @@
 
     <ul class="menu-inner py-1">
 
-        <!-- DASHBOARD (everyone can see) -->
-        <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <a href="{{ route('admin.dashboard') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-smile"></i>
-                <div class="text-truncate">Dashboard</div>
-            </a>
-        </li>
-
         <!-- ADMIN ONLY -->
         @if($role === 'Admin')
             <li class="menu-item {{ request()->routeIs('role.*') ? 'active' : '' }}">
@@ -44,6 +36,15 @@
 
         <!-- ADMIN & STAFF shared items -->
         @if(in_array($role, ['Admin', 'Staff']))
+
+            <!-- DASHBOARD (everyone can see) -->
+            <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-smile"></i>
+                    <div class="text-truncate">Dashboard</div>
+                </a>
+            </li>
+            
             <li class="menu-item {{ request()->routeIs('staffs.*') ? 'active' : '' }}">
                 <a href="{{ route('staffs.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-bxs-user-account"></i>
@@ -74,12 +75,23 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('sale.*') ? 'active' : '' }}">
-            <a href="{{ route('sale.index') }}" class="menu-link">
+        @if(in_array($role, ['Admin', 'Staff', 'Seller']))
+        <li class="menu-item {{ request()->routeIs('pos.entry') ? 'active' : '' }}">
+            <a href="{{ route('pos.entry') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-bxs-cart-alt"></i>
                 <div class="text-truncate">Point of Sale (POS)</div>
             </a>
         </li>
+        @endif
+
+        @if(in_array($role, ['Admin', 'Staff', 'Cashier']))
+        <li class="menu-item {{ request()->routeIs('pos.checkout') ? 'active' : '' }}">
+            <a href="{{ route('pos.checkout') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bxs-cart-add"></i>
+                <div class="text-truncate">Point of Sale (POS)</div>
+            </a>
+        </li>
+        @endif
 
         <li class="menu-item {{ request()->routeIs('report.sale') ? 'active' : '' }}">
             <a href="{{ route('report.sale') }}" class="menu-link">

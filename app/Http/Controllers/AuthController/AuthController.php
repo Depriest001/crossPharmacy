@@ -39,7 +39,15 @@ class AuthController extends Controller
         // 🔥 The correct way to log in manually
         Auth::guard('staff')->login($staff);
 
-        return redirect()->route('admin.dashboard');
+        if ($staff->role->role_type === "Seller") {
+            return redirect()->route('pos.entry');
+            
+        } else if ($staff->role->role_type === "Cashier") {
+            return redirect()->route('pos.checkout');
+
+        }elseif (in_array($staff->role->role_type, ['Admin', 'Staff'])) {
+            return redirect()->route('admin.dashboard');
+        }
     }
 
     public function logout(Request $request)

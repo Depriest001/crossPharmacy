@@ -13,11 +13,25 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('staff_id')->constrained('staff')->onDelete('cascade');
-            $table->decimal('subtotal', 10, 2);
+
+            // Seller & cashier
+            $table->foreignId('seller_id')->constrained('staff')->onDelete('cascade');
+            $table->foreignId('cashier_id')->nullable()->constrained('staff')->onDelete('cascade');
+
+            // Optional branch link
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete();
+
+            // Totals
+            $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('grand_total', 10, 2);
-            $table->string('payment_method');
+            $table->decimal('grand_total', 10, 2)->default(0);
+
+            // Payment
+            $table->string('payment_method')->nullable(); // cashier will set this
+
+            // POS Flow status
+            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+
             $table->timestamps();
         });
     }

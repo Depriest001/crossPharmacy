@@ -115,6 +115,7 @@
                         <option value="Admin">Admin</option>
                         <option value="Staff">Staff</option>
                         <option value="Cashier">Cashier</option>
+                        <option value="Seller">Seller</option>
                     </select>
                 </div>
                 <div class="form-group mt-2">

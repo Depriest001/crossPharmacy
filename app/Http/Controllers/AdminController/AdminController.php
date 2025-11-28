@@ -21,20 +21,19 @@ class AdminController extends Controller
 
         // Base queries
         $staffQuery = Staff::where('status', 'active');
-        $salesQuery = Sale::query();
+        $salesQuery = Sale::query()->where('status', 'completed');
         $saleItemsQuery = SaleItem::query();
 
         if (!$isAdmin) {
-            // Restrict staff to the same branch
+
+            // Restrict staff to same branch
             $staffQuery->where('branch_id', $staff->branch_id);
 
-            // Restrict sales to staff within the same branch
-            $salesQuery->whereHas('staff', function ($q) use ($staff) {
-                $q->where('branch_id', $staff->branch_id);
-            });
+            // Restrict sales by branch_id (NOT staff_id)
+            $salesQuery->where('branch_id', $staff->branch_id);
 
-            // Restrict sale items to sales made by staff in the same branch
-            $saleItemsQuery->whereHas('sale.staff', function ($q) use ($staff) {
+            // Restrict sale items based on sales from same branch
+            $saleItemsQuery->whereHas('sale', function ($q) use ($staff) {
                 $q->where('branch_id', $staff->branch_id);
             });
         }

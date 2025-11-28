@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // e.g., Admin, Pharmacist, Cashier
-            $table->enum('role_type', ['Admin', 'Staff','Cashier']);            
+            $table->enum('role_type', ['Admin', 'Staff','Cashier','Seller']);            
             $table->text('description')->nullable();
             $table->timestamps();
         });

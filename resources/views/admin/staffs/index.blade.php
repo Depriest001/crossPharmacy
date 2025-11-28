@@ -119,13 +119,16 @@
                             <a href="{{ route('staffs.show', $staff->id) }}" class="btn p-2 btn-info me-1">
                                 <i class="bx bx-show-alt"></i>
                             </a>
-                            <form action="{{ route('staffs.destroy', $staff->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure?')" class="btn p-2 btn-danger">
-                                <i class="bx bx-trash"></i>
-                                </button>
-                            </form>
+
+                            @if (strtolower($staff->role->name ?? '') !== 'admin')
+                                <form action="{{ route('staff.soft.delete', $staff->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn p-2 btn-danger">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
                             </td>
                         </tr>
                         @empty

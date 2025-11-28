@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Branch;
 use App\Models\Staff;
+
 class AdminStaffController extends Controller
 {
     public function index()
@@ -16,7 +17,7 @@ class AdminStaffController extends Controller
         $staffs = Staff::with(['role', 'branch'])
             ->when($staff->role->role_type !== 'Admin', function ($query) use ($staff) {
                 $query->where('branch_id', $staff->branch_id);
-            })
+            })->where('status', '!=', 'deleted')
             ->latest()
             ->get();
 
@@ -55,7 +56,7 @@ class AdminStaffController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show($id)
     {
         $staff = Staff::with(['role', 'branch'])->findOrFail($id);
@@ -64,7 +65,7 @@ class AdminStaffController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
+    */
     public function edit($id)
     {
         $staff = Staff::findOrFail($id);
@@ -103,15 +104,34 @@ class AdminStaffController extends Controller
             ->with('success', 'Staff details updated successfully!');
     }
 
+    public function softdelete (Request $request, $id)
+    {
+        $staff = Staff::findOrFail($id);
+
+        $staff->update([
+            'status' => 'deleted',
+        ]);
+
+        return redirect()
+            ->route('staffs.index')
+            ->with('success', 'Staff deleted successfully!');
+    }
+
     /**
      * Remove the specified resource from storage.
-     */
+    */
     public function destroy($id)
     {
         $staff = Staff::findOrFail($id);
+
+        if (strtolower($staff->role->name) === 'admin') {
+            return back()->with('error', 'Admin accounts cannot be deleted.');
+        }
+
         $staff->delete();
 
-        return redirect()->route('staffs.index')->with('success', 'Staff deleted successfully!');
+        return back()->with('success', 'Staff deleted successfully.');
     }
+
 
 }

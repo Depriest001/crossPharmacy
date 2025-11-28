@@ -14,15 +14,24 @@
                                 use Carbon\Carbon;
                                 use App\Models\Sale;
 
-                                $todaySales = Sale::where('staff_id', auth('staff')->id())
+                                $branchId = auth('staff')->user()->branch_id;
+
+                                // Today's sales for this branch
+                                $todaySales = Sale::where('branch_id', $branchId)
+                                    ->where('status', 'completed')
                                     ->whereDate('created_at', Carbon::today())
                                     ->sum('grand_total');
 
-                                $yesterdaySales = Sale::where('staff_id', auth('staff')->id())
+                                // Yesterday's sales for this branch
+                                $yesterdaySales = Sale::where('branch_id', $branchId)
+                                    ->where('status', 'completed')
                                     ->whereDate('created_at', Carbon::yesterday())
                                     ->sum('grand_total');
 
-                                $growth = $yesterdaySales > 0 ? (($todaySales - $yesterdaySales) / $yesterdaySales) * 100 : 0;
+                                // Growth percentage
+                                $growth = $yesterdaySales > 0 
+                                    ? (($todaySales - $yesterdaySales) / $yesterdaySales) * 100 
+                                    : 0;
                             @endphp
 
                             <p class="mb-6">
